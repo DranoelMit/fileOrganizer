@@ -1,11 +1,8 @@
 import os
 
-def makeFolder(folderName):
-    os.mkdir(path+folderName)
 
-def placeInFolder(fileName):
-    ok.rename(path,path+fileName)
+def makeFolder(folderPath, folderName):
+    os.mkdir(folderPath+"/"+folderName.replace("\"",""))
 
-
-    
-    
+def placeInFolder(folderPath, fileName):
+    os.rename(folderPath,folderPath+"/"+fileName)
