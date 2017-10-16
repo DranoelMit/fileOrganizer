@@ -51,7 +51,7 @@ def addToFolder():
                 if(word==key):
                     placeInFolder(folderPath, word, filename)
                     break
-            break
+            
 
 
 def keywordFinder(filename):
