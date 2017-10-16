@@ -8,6 +8,7 @@ from rake_nltk import Rake
 
 folderPath = input("Enter the path you would like to organize: ")
 keywordDict ={}
+fileTexts= {}
 
 def fileOrganizer(path):
     #Stage 1.0: find keywords in each file
@@ -23,46 +24,44 @@ def fileOrganizer(path):
 
     #Stage 1.1: create folders
     #add new keywords from all files to dictionary, if already in dictionary, ++
+    lst2Del =[]
     for key in keywordDict:
         if(keywordDict[key] > 1):
             makeFolder(folderPath, key)
-        else: del key
+        else: lst2Del.append(key)
 
-    for filename in os.listdir(path):
-        addToFolder(filename)
+    for word in lst2Del:
+        del keywordDict[word]
+
+    addToFolder()
 
     for key in keywordDict:
-        if(os.listdir(path+key) == ""):
+        if(os.listdir(str(path+"/"+key).replace("\"","")) == ""):
             os.rmdir(path+key)
 
 
-def addToFolder(filename):
-    os.chdir(folderPath)
-    with open(filename, 'r', errors="replace") as dirFile:
-        fileText = dirFile.read()
+def addToFolder():
+    for filename in fileTexts:
         r=Rake()
-        r.extract_keywords_from_text(fileText)
+        r.extract_keywords_from_text(fileTexts[filename])
         keywords = r.get_ranked_phrases()
 
-
-    for word in keywords[0:5]:
         for key in keywordDict:
-            if(word==key):
-                placeInFolder(folderPath, filename)
-                break
-
-
-
-
+            for word in keywords[0:5]:
+                if(word==key):
+                    placeInFolder(folderPath, word, filename)
+                    break
+            break
 
 
 def keywordFinder(filename):
     os.chdir(folderPath)
-    with open(filename, 'r', errors="replace") as dirFile:
-        fileText = dirFile.read()
-        r=Rake()
-        r.extract_keywords_from_text(fileText)
-        keywords = r.get_ranked_phrases()
+    dirFile= open(filename, 'r', errors="replace")
+    fileTexts[filename]= dirFile.read()
+    dirFile.close()
+    r=Rake()
+    r.extract_keywords_from_text(fileTexts[filename])
+    keywords = r.get_ranked_phrases()
 
     for word in keywords[0:5]:
         if(word in keywordDict):
