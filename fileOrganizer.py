@@ -112,13 +112,13 @@ def findRelKeywords(keyword):
         except KeyError:
                 print(keyword + " is not accepted by Word2Vec")
     for item in similars:
-            word = str(item)[3:str(item).rfind("\'")]
+            word = str(item)[2:str(item).rfind("\'")]
             if(word in keywordDict):
                 keywordDict[word]+=1
             else:
                 keywordDict[word]=1
                 ogKeywordRels[keyword].append(word)
-
+#THIS DOES NOT WORK
 
 
 
