@@ -11,7 +11,7 @@ keywordDict ={}
 fileTexts= {}
 keyLst2Del =[] #keywords that did not have matches in Stage 1
 textLst2Del ={} #The files that DID have matches in Stage 1
-ogKeywordRels = {}
+ogKeywordRels = {} # "relWord1,relWord2,....."
 
 
 def fileOrganizer(path):
@@ -32,6 +32,7 @@ def fileOrganizer(path):
     for key in keywordDict:
         if(keywordDict[key] > 1):
             makeFolder(folderPath, key)
+            keywordDict[key] =0
         else: keyLst2Del.append(key)
 
     for word in keyLst2Del:
@@ -43,32 +44,46 @@ def fileOrganizer(path):
         if(os.listdir(str(path+"/"+key).replace("\"","")) == ""):
             os.rmdir(path+key)
 
+
+
+
+
     for title in textLst2Del:
-        del fileTexts[title]
+            del fileTexts[title]
+
+            #AT THIS POINT, the only text files left are the ones not in folders
+
+
+
+
     #Stage 2.0: create lists of related words to each keyword, then try and make matches that way
 
 
+    #This is sending list of words without matches
     for keyword in keyLst2Del:
+        ogKeywordRels[keyword]=[]
         findRelKeywords(keyword)
 
     for key in keywordDict:
         if(keywordDict[key] > 1):
-            try:
                 makeFolder(folderPath, key)
-            except FileExistsError:
-                print("file already exists")
 
-    for key in fileTexts:
-        for lstRelKeyword in ogKeywordRels:
-            for i in ogKeywordRels[lstRelKeyword]:
-                if(lstRelKeyword in fileTexts[key] and keywordDict[i] > 1):
-                    placeInFolder(folderPath, i, key)
+    for key in keywordDict:
+        if(keywordDict[key] > 1):
+            for txtfile in fileTexts:
+                for word in keyLst2Del:
+                    if(word in fileTexts[txtfile] and key in ogKeywordRels[word]):
+                        placeInFolder(folderPath, key, txtfile)
+                        break
 
+#NEED TO: check for each rel keyword that has multiple tallis,
 
+            #for each file, check each keyword, if that keyword is in ogKeywordRels
 
+                    # then check each word in that value array to see if == word with multiple tallies
 
-    #NEED TO FIND WHICH FILES HAVE THE KEYWORDS THAT MADE THE RELATION FOLDERS & ADD THEM TO IT
-        #Added dict list of keywords and the relkeywords that branched from the
+                        #if so, add to folderPath
+
 
 
 
@@ -113,12 +128,18 @@ def findRelKeywords(keyword):
                 print(keyword + " is not accepted by Word2Vec")
     for item in similars:
             word = str(item)[2:str(item).rfind("\'")]
+
             if(word in keywordDict):
                 keywordDict[word]+=1
             else:
-                keywordDict[word]=1
+                keywordDict[word] =1
                 ogKeywordRels[keyword].append(word)
-#THIS DOES NOT WORK
+
+#I now have:
+# ogKeywordRels keyword = [relWord1,relWord2, .....]
+#keywordDict now has tallies of related words
+
+
 
 
 
