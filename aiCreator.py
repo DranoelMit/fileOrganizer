@@ -16,4 +16,6 @@ for filename in os.listdir(os.getcwd()):
 
 model = gensim.models.Word2Vec(tok_corp, min_count=1, size = 32)
 
+
+#print(str(model.most_similar('dog')))
 model.save('C:/Users/Tim/Desktop/Projects/fileOrganizer/AI')
