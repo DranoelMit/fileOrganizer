@@ -30,7 +30,7 @@ def fileOrganizer(path):
     #add new keywords from all files to dictionary, if already in dictionary, ++
 
     for key in keywordDict:
-        if(keywordDict[key] > 1):
+        if(keywordDict[key] > 1 and ''.join(e for e in key if e.isalnum()) not in os.listdir(folderPath)):
             makeFolder(folderPath, key)
             keywordDict[key] =0
         else: keyLst2Del.append(key)
@@ -41,8 +41,8 @@ def fileOrganizer(path):
     addToFolder()
 
     for key in keywordDict:
-        if(len(os.listdir(str(path+"/"+key).replace("\"","").replace(" ",""))) == 0):
-            os.rmdir(str(path+"/"+key).replace("\"","").replace(" ",""))
+        if(len(os.listdir(str(path+"/"+''.join(e for e in key if e.isalnum())))) == 0):
+            os.rmdir((str(path+"/"+''.join(e for e in key if e.isalnum()))))
 
 
     for title in textLst2Del:
@@ -75,8 +75,8 @@ def fileOrganizer(path):
                         break
 
     for key in keywordDict:
-        if(keywordDict[key] > 1 and len(os.listdir(str(path+"/"+key).replace("\"","").replace(" ",""))) == 0):
-            os.rmdir(str(path+"/"+key).replace("\"","").replace(" ",""))
+        if(keywordDict[key] > 1 and len(os.listdir(str(''.join(e for e in path if e.isalnum())+"/"+''.join(e for e in key if e.isalnum())))) == 0):
+            os.rmdir(str(''.join(e for e in path if e.isalnum())+"/"+''.join(e for e in key if e.isalnum())))
 
             #NEED TO: check for each rel keyword that has multiple tallis,
 
@@ -97,7 +97,7 @@ def addToFolder():
 
         for key in keywordDict:
             for word in keywords[0:5]:
-                if(word==key and filename in os.listdir(str(folderPath).replace("\"","").replace(" ",""))):
+                if(word==key and filename in os.listdir(folderPath)):
                     placeInFolder(folderPath, word, filename)
                     textLst2Del[filename] =fileTexts[filename]
                     break
