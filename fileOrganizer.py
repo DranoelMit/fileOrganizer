@@ -41,11 +41,8 @@ def fileOrganizer(path):
     addToFolder()
 
     for key in keywordDict:
-        if(os.listdir(str(path+"/"+key).replace("\"","")) == ""):
-            os.rmdir(path+key)
-
-
-
+        if(len(os.listdir(str(path+"/"+key).replace("\"","").replace(" ",""))) == 0):
+            os.rmdir(str(path+"/"+key).replace("\"","").replace(" ",""))
 
 
     for title in textLst2Del:
@@ -97,7 +94,7 @@ def addToFolder():
 
         for key in keywordDict:
             for word in keywords[0:5]:
-                if(word==key):
+                if(word==key and filename in os.listdir(str(folderPath).replace("\"","").replace(" ",""))):
                     placeInFolder(folderPath, word, filename)
                     textLst2Del[filename] =fileTexts[filename]
                     break
