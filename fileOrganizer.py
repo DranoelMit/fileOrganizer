@@ -22,7 +22,7 @@ def fileOrganizer(path):
             break
         else: keywordFinder(filename)
 
-    # for key ipythn keywordDict:
+    # for key in keywordDict:
     #     if(keywordDict[key] > 1):
     #         print(key + "           " + str(keywordDict[key]))
 
@@ -70,18 +70,21 @@ def fileOrganizer(path):
             for txtfile in fileTexts:
                 for word in keyLst2Del:
                     if(word in fileTexts[txtfile] and key in ogKeywordRels[word]):
-                        placeInFolder(folderPath, key, txtfile)
+                        if(txtfile in os.listdir(folderPath)):
+                            placeInFolder(folderPath, key, txtfile)
                         break
 
-#NEED TO: check for each rel keyword that has multiple tallis,
+    for key in keywordDict:
+        if(keywordDict[key] > 1 and len(os.listdir(str(path+"/"+key).replace("\"","").replace(" ",""))) == 0):
+            os.rmdir(str(path+"/"+key).replace("\"","").replace(" ",""))
+
+            #NEED TO: check for each rel keyword that has multiple tallis,
 
             #for each file, check each keyword, if that keyword is in ogKeywordRels
 
-                    # then check each word in that value array to see if == word with multiple tallies
+            # then check each word in that value array to see if == word with multiple tallies
 
-                        #if so, add to folderPath
-
-
+            #if so, add to folderPath
 
 
 
